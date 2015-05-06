@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -27,7 +28,8 @@ public class e63final {
       
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString());
+      StringTokenizer itr = new StringTokenizer(value.toString(),";");
+      System.out.println(itr.countTokens());
       
      // System.out.println("----"+value.toString()+"----");
      
@@ -87,14 +89,17 @@ public class e63final {
   }
 
   public static void main(String[] args) throws Exception {
-    Configuration conf = new Configuration();
+   
+	  Configuration conf = new Configuration();
     String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+  
+    FileUtils.deleteDirectory(new File(otherArgs[1]));
+    
     if (otherArgs.length != 2) {
       System.err.println("Usage: wordcount <in> <out>");
       System.exit(2);
     }
-    File tempFile=new File(otherArgs[1]);
-    tempFile.delete();
+
     Job job = new Job(conf, "word count");
     job.setJarByClass(e63final.class);
     job.setMapperClass(TokenizerMapper.class);
