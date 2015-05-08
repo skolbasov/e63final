@@ -26,7 +26,9 @@ public class PriceWritable implements Writable {
 		this.closePrice=Double.parseDouble(closePrice);
 		
 		try {
-			this.timeslot=formatter.parse(date.concat(time));
+			date=date.concat(time);
+			this.timeslot=formatter.parse(date);
+		//	System.out.println(printFormatter.format(this.timeslot));
 
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -38,6 +40,7 @@ public class PriceWritable implements Writable {
 		this.highPrice=in.readDouble();
 		this.lowPrice=in.readDouble();
 		this.closePrice=in.readDouble();
+		this.timeslot = new Date(in.readLong());
 	}
 
 	@Override
@@ -45,7 +48,9 @@ public class PriceWritable implements Writable {
 		out.writeDouble(this.highPrice);
 		out.writeDouble(this.lowPrice);
 		out.writeDouble(this.closePrice);
-		System.out.println("write completed");
+		out.writeLong(this.timeslot.getTime());
+		
+	//	System.out.println("write completed");
 	}
 	
     public String toString() {

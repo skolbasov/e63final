@@ -17,14 +17,14 @@ import org.apache.hadoop.util.GenericOptionsParser;
 public class e63final {
 
 	public static class TokenizerMapper extends
-			Mapper<Object, Text, String, PriceWritable> {
+			Mapper<Object, Text, Text, PriceWritable> {
 
 		@Override
 		public void map(Object key, Text value, Context context)
 				throws IOException, InterruptedException {
 
 
-			String val = value.toString().replace(".", ",");// replacing . to ,
+		//String val = value.toString().replace(".", ",");// replacing . to ,
 															// in prices for
 															// correct
 															// convertation to
@@ -32,31 +32,31 @@ public class e63final {
 
 			
 		
-			String[] itr = val.split(";");
-			System.out.println(itr[5]+" "+itr[6]+" "+itr[7]);
+			String[] itr = value.toString().split(";");
+			//System.out.println(itr[5]+" "+itr[6]+" "+itr[7]);
 		//	itr[5].
-			if (itr[5].matches("//[0-9,]")
-					&& itr[6].matches("//[0-9,]")
-					&& itr[7].matches("//[0-9,]")) {
-				System.out.println(itr[7]);
+		//	if (itr[5].matches("//[0-9,]")
+			//		&& itr[6].matches("//[0-9,]")
+				//	&& itr[7].matches("//[0-9,]")) {
+				//System.out.println(itr[7]);
 				String ticker = itr[0];
 
 				PriceWritable price = new PriceWritable(itr[5], itr[6], itr[7],
 						itr[2], itr[3]);
-				System.out.println(price);
+			//	System.out.println(price);
 				//int volume = Integer.parseInt(itr[8]);
 
-				context.write(ticker, price);
+				context.write(new Text(ticker), price);
 
-			}
+		//	}
 		}
 	}
 
 	public static class IntSumReducer extends
-			Reducer<String, Iterable<PriceWritable>, String, PriceWritable> {
+			Reducer<Text, Iterable<PriceWritable>, Text, PriceWritable> {
 		// private IntWritable result = new IntWritable();
 
-		public void reduce(String key, Iterable<PriceWritable> values,
+		public void reduce(Text key, Iterable<PriceWritable> values,
 				Context context) throws IOException, InterruptedException {
 		
 			
@@ -99,11 +99,11 @@ public class e63final {
 		job.setJarByClass(e63final.class);
 		job.setMapperClass(TokenizerMapper.class);
 		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(IntWritable.class);
+		job.setMapOutputValueClass(PriceWritable.class);
 		job.setCombinerClass(IntSumReducer.class);
 		job.setReducerClass(IntSumReducer.class);
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
+		job.setOutputValueClass(PriceWritable.class);
 		FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 		FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
