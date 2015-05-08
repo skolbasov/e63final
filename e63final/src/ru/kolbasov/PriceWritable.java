@@ -10,20 +10,18 @@ import java.util.Date;
 import org.apache.hadoop.io.Writable;
 
 public class PriceWritable implements Writable {
-	Double highPrice;
-    Double lowPrice;
-    Double closePrice;
-    Date timeslot;
-    SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+	private Date timeslot;
+	private Price price;
+
+
+	private SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
+	private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 	public PriceWritable() {
 		
 	}
 	
 	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date, String time) {
-		this.highPrice=Double.parseDouble(highPrice);
-		this.lowPrice=Double.parseDouble(lowPrice);
-		this.closePrice=Double.parseDouble(closePrice);
+		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
 		
 		try {
 			date=date.concat(time);
@@ -37,25 +35,30 @@ public class PriceWritable implements Writable {
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
-		this.highPrice=in.readDouble();
-		this.lowPrice=in.readDouble();
-		this.closePrice=in.readDouble();
+		
+		this.price.setHighPrice(in.readDouble());
+		this.price.setLowPrice(in.readDouble());
+		this.price.setClosePrice(in.readDouble());
+
 		this.timeslot = new Date(in.readLong());
 	}
 
 	@Override
 	public void write(DataOutput out) throws IOException {
-		out.writeDouble(this.highPrice);
-		out.writeDouble(this.lowPrice);
-		out.writeDouble(this.closePrice);
+		out.writeDouble(this.price.getHighPrice());
+		out.writeDouble(this.price.getLowPrice());
+		out.writeDouble(this.price.getClosePrice());
 		out.writeLong(this.timeslot.getTime());
 		
 	//	System.out.println("write completed");
 	}
-	
-    public String toString() {
-    	
-        return "Timeslot:"+printFormatter.format(this.timeslot)+" Highest price:"+this.highPrice + " Lowest price:" + this.lowPrice + " Close price:" + this.closePrice;
-    }
+
+	@Override
+	public String toString() {
+		return "PriceWritable [timeslot=" + timeslot + ", price=" + price + "]";
+	}
+
+
+
 
 }

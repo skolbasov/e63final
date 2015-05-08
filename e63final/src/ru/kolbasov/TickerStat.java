@@ -26,23 +26,30 @@ public class TickerStat implements Writable {
 
 	}
 
-	public TickerStat(ArrayList<Double> highPrices,ArrayList<Double> lowPrices, ArrayList<Double> closePrices,
+	public TickerStat(ArrayList<Price> prices,
 			Double medianPrice, Double beta, Double meanPrice, Date beginTime,
 			Date endTime) {
 		DescriptiveStatistics stats=new DescriptiveStatistics();
-		ArrayList<Double> prices=new ArrayList<Double>();
-		prices.addAll(highPrices);
-		prices.addAll(lowPrices);
-		prices.addAll(closePrices);
-		for(Double price:prices){
-			stats.addValue(price);
+
+		for(Price price:prices){
+			stats.addValue(price.getHighPrice());
+			stats.addValue(price.getClosePrice());
+			stats.addValue(price.getLowPrice());
+		
+		}
+		
+		ArrayList<Double> closeStats=new ArrayList<Double>();
+		
+		for(Price price:prices){
+
+			closeStats.add(price.getClosePrice());
+		
 		}
 		
 		this.highestPriceForAnalysisTime = stats.getMax();
 		this.lowestPriceForAnalysisTime = stats.getMin();
-		this.closePrice = closePrices.get(closePrices.size()-1);
-		this.medianPrice = stats.getPercentile(50);
-
+		this.closePrice = closeStats.get(closeStats.size()-1);
+		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
 		this.meanPrice = stats.getMean();
 		this.beginTime = beginTime;
 		this.endTime = endTime;
@@ -55,7 +62,6 @@ public class TickerStat implements Writable {
 		lowestPriceForAnalysisTime = in.readDouble();
 		closePrice = in.readDouble();
 		medianPrice = in.readDouble();
-		
 		meanPrice = in.readDouble();
 		beginTime = new Date(in.readLong());
 		endTime = new Date(in.readLong());
@@ -67,7 +73,6 @@ public class TickerStat implements Writable {
 		out.writeDouble(lowestPriceForAnalysisTime);
 		out.writeDouble(closePrice);
 		out.writeDouble(medianPrice);
-	
 		out.writeDouble(meanPrice);
 		out.writeLong(beginTime.getTime());
 		out.writeLong(endTime.getTime());

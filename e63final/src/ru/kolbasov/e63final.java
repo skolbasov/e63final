@@ -2,6 +2,8 @@ package ru.kolbasov;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -33,6 +35,8 @@ public class e63final {
 			
 		
 			String[] itr = value.toString().split(";");
+			//TODO: add data check
+			
 			//System.out.println(itr[5]+" "+itr[6]+" "+itr[7]);
 		//	itr[5].
 		//	if (itr[5].matches("//[0-9,]")
@@ -58,12 +62,14 @@ public class e63final {
 
 		public void reduce(Text key, Iterable<PriceWritable> values,
 				Context context) throws IOException, InterruptedException {
-		
+			ArrayList<Double> highPrices
 			
 			for(PriceWritable next:values){
 				System.out.println(next.toString());
-				context.write(key, next);
+				next.
+				
 			}
+			context.write(key, next);
 			/*
 			 * result.set(0);
 			 * 
