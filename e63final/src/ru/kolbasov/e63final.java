@@ -34,7 +34,7 @@ public class e63final {
 		
 			String[] itr = val.split(";");
 			System.out.println(itr[5]+" "+itr[6]+" "+itr[7]);
-			itr[5].
+		//	itr[5].
 			if (itr[5].matches("//[0-9,]")
 					&& itr[6].matches("//[0-9,]")
 					&& itr[7].matches("//[0-9,]")) {
