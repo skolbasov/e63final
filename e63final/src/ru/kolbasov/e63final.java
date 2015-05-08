@@ -3,6 +3,9 @@ package ru.kolbasov;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -28,9 +31,21 @@ public class e63final {
       
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString(),";");
-      System.out.println(itr.countTokens());
+     // StringTokenizer itr = new StringTokenizer(value.toString(),";");
+      //System.out.println(itr.countTokens());
+    	String val=value.toString().replace(".", ",");//replacing . to , in prices for correct convertation to double
       
+    	String[] itr=val.split(";");
+    	if (itr[5].matches("//[0-9],[0-9]")&&itr[6].matches("//[0-9],[0-9]")&&itr[7].matches("//[0-9],[0-9]")&&itr[8].matches("//[0-9],[0-9]")){
+    	System.out.println(itr[7]);
+      String ticker=itr[0];
+      String date=itr[2];
+     
+      Double highPrice=Double.parseDouble(itr[5]);
+      Double lowPrice=Double.parseDouble(itr[6]);
+      Double closePrice=Double.parseDouble(itr[7]);
+      int volume=Integer.parseInt(itr[8]);}
+    	
      // System.out.println("----"+value.toString()+"----");
      
       //reading key-value pairs from the file. i know exactly that each string contain two values, one is key, another is value
