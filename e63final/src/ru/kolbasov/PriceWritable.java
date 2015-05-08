@@ -3,6 +3,9 @@ package ru.kolbasov;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.hadoop.io.Writable;
 
@@ -10,17 +13,27 @@ public class PriceWritable implements Writable {
 	Double highPrice;
     Double lowPrice;
     Double closePrice;
+    Date timeslot;
+    SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 	public PriceWritable() {
 		// TODO Auto-generated constructor stub
 		
 	}
 	
-	public PriceWritable(String highPrice,String lowPrice, String closePrice) {
+	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date, String time) {
 		// TODO Auto-generated constructor stub
 		this.highPrice=Double.parseDouble(highPrice);
 		this.lowPrice=Double.parseDouble(lowPrice);
 		this.closePrice=Double.parseDouble(closePrice);
 		
+		try {
+			this.timeslot=formatter.parse(date.concat(time));
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -40,7 +53,8 @@ public class PriceWritable implements Writable {
 	}
 	
     public String toString() {
-        return "High price:"+this.highPrice + " Low price:" + this.lowPrice + " Close price:" + this.closePrice;
+    	
+        return "Timeslot:"+printFormatter.format(this.timeslot)+" Highest price:"+this.highPrice + " Lowest price:" + this.lowPrice + " Close price:" + this.closePrice;
     }
 
 }

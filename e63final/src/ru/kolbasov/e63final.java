@@ -23,7 +23,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 public class e63final {
 
   public static class TokenizerMapper 
-       extends Mapper<Object, Text, Text, IntWritable>{
+       extends Mapper<Object, Text, String, PriceWritable>{
     
     private IntWritable quantity = new IntWritable();
     private Integer quantityInt;
@@ -31,6 +31,7 @@ public class e63final {
       
     public void map(Object key, Text value, Context context
                     ) throws IOException, InterruptedException {
+    	
      // StringTokenizer itr = new StringTokenizer(value.toString(),";");
       //System.out.println(itr.countTokens());
     	String val=value.toString().replace(".", ",");//replacing . to , in prices for correct convertation to double
@@ -39,12 +40,16 @@ public class e63final {
     	if (itr[5].matches("//[0-9],[0-9]")&&itr[6].matches("//[0-9],[0-9]")&&itr[7].matches("//[0-9],[0-9]")&&itr[8].matches("//[0-9],[0-9]")){
     	System.out.println(itr[7]);
       String ticker=itr[0];
-      String date=itr[2];
-     
-      Double highPrice=Double.parseDouble(itr[5]);
-      Double lowPrice=Double.parseDouble(itr[6]);
-      Double closePrice=Double.parseDouble(itr[7]);
-      int volume=Integer.parseInt(itr[8]);}
+   
+      PriceWritable price=new PriceWritable(itr[5],itr[6],itr[7],itr[2],itr[3]);
+
+      int volume=Integer.parseInt(itr[8]);
+      
+    	
+      context.write(ticker, price);
+    	
+    	
+    	}
     	
      // System.out.println("----"+value.toString()+"----");
      
@@ -67,7 +72,7 @@ public class e63final {
      wrd=wrd.replaceAll("[{-~]", ""); 
        word.set(wrd);
 */
-        context.write(word, quantity);
+        
   //  }
     }
   }
@@ -79,7 +84,7 @@ public class e63final {
     public void reduce(Text key, Iterable<IntWritable> values, 
                        Context context
                        ) throws IOException, InterruptedException {
-     
+     /*
     	result.set(0);
       
       //if (!key.toString().matches("[0-9]{8}")){//if string is not like 01:004:010 without semicolons then leave it  
@@ -96,7 +101,7 @@ public class e63final {
           context.write(new Text(result.toString()),key);
           }
 
-    
+    */
     }
     
     
