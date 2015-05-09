@@ -3,13 +3,14 @@ package ru.kolbasov;
 public class Price {
 	private Double highPrice;
 	private Double lowPrice;
+	private Double closePrice;
 	public Price(Double highPrice, Double lowPrice, Double closePrice) {
 		super();
 		this.highPrice = highPrice;
 		this.lowPrice = lowPrice;
 		this.closePrice = closePrice;
 	}
-	private Double closePrice;
+
 	public Double getHighPrice() {
 		return highPrice;
 	}

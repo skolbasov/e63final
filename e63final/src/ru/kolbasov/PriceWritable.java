@@ -11,7 +11,7 @@ import org.apache.hadoop.io.Writable;
 
 public class PriceWritable implements Writable {
 	private Date timeslot;
-	private Price price;
+	private Price price=new Price();
 
 
 	public Date getTimeslot() {
@@ -55,8 +55,8 @@ public class PriceWritable implements Writable {
 		this.price.setHighPrice(in.readDouble());
 		this.price.setLowPrice(in.readDouble());
 		this.price.setClosePrice(in.readDouble());
-
 		this.timeslot = new Date(in.readLong());
+		
 	}
 
 	@Override
@@ -66,13 +66,18 @@ public class PriceWritable implements Writable {
 		out.writeDouble(this.price.getClosePrice());
 		out.writeLong(this.timeslot.getTime());
 		
-	//	System.out.println("write completed");
 	}
 
 	@Override
 	public String toString() {
 		return "PriceWritable [timeslot=" + printFormatter.format(timeslot) + ", price=" + price + "]";
 	}
+	
+    public static PriceWritable read(DataInput in) throws IOException {
+        PriceWritable w = new PriceWritable();
+        w.readFields(in);
+        return w;
+      }
 
 
 
