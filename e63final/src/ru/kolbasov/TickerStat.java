@@ -3,6 +3,7 @@ package ru.kolbasov;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ public class TickerStat implements Writable {
 	private Date endTime;
 	private SimpleDateFormat printFormatter = new SimpleDateFormat(
 			"dd-MM-yyyy HH-mm-ss");
+	DecimalFormat df = new DecimalFormat("#.######");
 	public TickerStat() {
 
 	}
@@ -48,6 +50,7 @@ public class TickerStat implements Writable {
 		this.lowestPriceForAnalysisTime = stats.getMin();
 		this.closePrice = closeStats.get(closeStats.size()-1);
 		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
+		
 		this.meanPrice = stats.getMean();
 		this.beginTime = Collections.min(dates);
 		this.endTime = Collections.max(dates);
@@ -67,11 +70,11 @@ public class TickerStat implements Writable {
 
 	@Override
 	public String toString() {
-		return "TickerStat [beginTime=" + beginTime + ", endTime=" + endTime
+		return "TickerStat [beginTime=" + printFormatter.format(beginTime) + ", endTime=" + printFormatter.format(endTime)
 				+ ", highest price for analysis time is "
 				+ highestPriceForAnalysisTime + ", lowest price for analysis time is "
 				+ lowestPriceForAnalysisTime + ", close price is " + closePrice
-				+ ", median " + medianPrice + ", mean" + meanPrice
+				+ ", median " + df.format(medianPrice) + ", mean " + df.format(meanPrice)
 				+ "]";
 	}
 
