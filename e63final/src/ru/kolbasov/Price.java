@@ -22,6 +22,11 @@ public class Price {
 	public void setLowPrice(Double lowPrice) {
 		this.lowPrice = lowPrice;
 	}
+	@Override
+	public String toString() {
+		return "Price [highPrice=" + highPrice + ", lowPrice=" + lowPrice
+				+ ", closePrice=" + closePrice + "]";
+	}
 	public Double getClosePrice() {
 		return closePrice;
 	}
