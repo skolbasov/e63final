@@ -57,19 +57,13 @@ public class e63final {
 	}
 
 	public static class IntSumReducer extends
-			Reducer<Text, Iterable<PriceWritable>, Text, PriceWritable> {
+			Reducer<Text, Iterable<PriceWritable>, Text, TickerStat> {
 		// private IntWritable result = new IntWritable();
 
 		public void reduce(Text key, Iterable<PriceWritable> values,
 				Context context) throws IOException, InterruptedException {
-			ArrayList<Double> highPrices
-			
-			for(PriceWritable next:values){
-				System.out.println(next.toString());
-				next.
-				
-			}
-			context.write(key, next);
+
+			context.write(key, new TickerStat(values));
 			/*
 			 * result.set(0);
 			 * 

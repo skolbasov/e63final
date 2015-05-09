@@ -14,6 +14,22 @@ public class PriceWritable implements Writable {
 	private Price price;
 
 
+	public Date getTimeslot() {
+		return timeslot;
+	}
+
+	public void setTimeslot(Date timeslot) {
+		this.timeslot = timeslot;
+	}
+
+	public Price getPrice() {
+		return price;
+	}
+
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+
 	private SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 	public PriceWritable() {
@@ -55,7 +71,7 @@ public class PriceWritable implements Writable {
 
 	@Override
 	public String toString() {
-		return "PriceWritable [timeslot=" + timeslot + ", price=" + price + "]";
+		return "PriceWritable [timeslot=" + printFormatter.format(timeslot) + ", price=" + price + "]";
 	}
 
 

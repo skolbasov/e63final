@@ -26,33 +26,27 @@ public class TickerStat implements Writable {
 
 	}
 
-	public TickerStat(ArrayList<Price> prices,
-			Double medianPrice, Double beta, Double meanPrice, Date beginTime,
-			Date endTime) {
+	public TickerStat(Iterable<PriceWritable> prices) {
 		DescriptiveStatistics stats=new DescriptiveStatistics();
-
-		for(Price price:prices){
-			stats.addValue(price.getHighPrice());
-			stats.addValue(price.getClosePrice());
-			stats.addValue(price.getLowPrice());
-		
-		}
-		
 		ArrayList<Double> closeStats=new ArrayList<Double>();
-		
-		for(Price price:prices){
-
-			closeStats.add(price.getClosePrice());
-		
+		ArrayList<Date> dates=new ArrayList<Date>();
+		for(PriceWritable price:prices){
+			stats.addValue(price.getPrice().getHighPrice());
+			stats.addValue(price.getPrice().getClosePrice());
+			stats.addValue(price.getPrice().getLowPrice());
+			closeStats.add(price.getPrice().getClosePrice());
+			dates.add(price.getTimeslot());
 		}
+		
+	
 		
 		this.highestPriceForAnalysisTime = stats.getMax();
 		this.lowestPriceForAnalysisTime = stats.getMin();
 		this.closePrice = closeStats.get(closeStats.size()-1);
 		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
 		this.meanPrice = stats.getMean();
-		this.beginTime = beginTime;
-		this.endTime = endTime;
+		this.beginTime = Collections.min(dates);
+		this.endTime = Collections.max(dates);
 
 	}
 
