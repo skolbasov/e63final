@@ -1,11 +1,14 @@
-package ru.kolbasov;
+package ru.kolbasov.MRClasses;
 
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class CorrelationReducer extends
+import ru.kolbasov.auxiliaryClasses.TickerStat;
+import ru.kolbasov.writables.PriceWritable;
+
+public class TickerStatReducer extends
 		Reducer<Text, PriceWritable, Text, TickerStat> {
 
 	@Override

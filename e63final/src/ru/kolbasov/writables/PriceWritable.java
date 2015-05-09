@@ -1,24 +1,23 @@
-package ru.kolbasov;
+package ru.kolbasov.writables;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.hadoop.io.Writable;
 
+import ru.kolbasov.auxiliaryClasses.Price;
+import ru.kolbasov.auxiliaryClasses.StockDate;
+
 public class PriceWritable implements Writable {
-	private Date timeslot;
+	private StockDate timeslot;
 	private Price price=new Price();
 
-
-	public Date getTimeslot() {
+	public StockDate getTimeslot() {
 		return timeslot;
 	}
 
-	public void setTimeslot(Date timeslot) {
+	public void setTimeslot(StockDate timeslot) {
 		this.timeslot = timeslot;
 	}
 
@@ -30,8 +29,7 @@ public class PriceWritable implements Writable {
 		this.price = price;
 	}
 
-	private SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+
 	public PriceWritable() {
 		
 	}
@@ -39,14 +37,7 @@ public class PriceWritable implements Writable {
 	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date, String time) {
 		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
 		
-		try {
-			date=date.concat(time);
-			this.timeslot=formatter.parse(date);
-		//	System.out.println(printFormatter.format(this.timeslot));
 
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -55,7 +46,7 @@ public class PriceWritable implements Writable {
 		this.price.setHighPrice(in.readDouble());
 		this.price.setLowPrice(in.readDouble());
 		this.price.setClosePrice(in.readDouble());
-		this.timeslot = new Date(in.readLong());
+		this.timeslot = new StockDate(in.readLong());
 		
 	}
 
@@ -70,7 +61,7 @@ public class PriceWritable implements Writable {
 
 	@Override
 	public String toString() {
-		return "PriceWritable [timeslot=" + printFormatter.format(timeslot) + ", price=" + price + "]";
+		return "PriceWritable [timeslot=" + timeslot.toString() + ", price=" + price + "]";
 	}
 	
     public static PriceWritable read(DataInput in) throws IOException {

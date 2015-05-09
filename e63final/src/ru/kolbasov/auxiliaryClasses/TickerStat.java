@@ -1,4 +1,4 @@
-package ru.kolbasov;
+package ru.kolbasov.auxiliaryClasses;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -12,17 +12,16 @@ import java.util.Date;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.hadoop.io.Writable;
 
+import ru.kolbasov.writables.PriceWritable;
+
 public class TickerStat implements Writable {
 	private Double highestPriceForAnalysisTime;
 	private Double lowestPriceForAnalysisTime;
 	private Double closePrice;
 	private Double medianPrice;
-	
 	private Double meanPrice;
-	private Date beginTime;
-	private Date endTime;
-	private SimpleDateFormat printFormatter = new SimpleDateFormat(
-			"dd-MM-yyyy HH-mm-ss");
+	private StockDate beginTime;
+	private StockDate endTime;
 	DecimalFormat df = new DecimalFormat("#.######");
 	public TickerStat() {
 
@@ -35,7 +34,7 @@ public class TickerStat implements Writable {
 	public TickerStat(Iterable<PriceWritable> prices) {
 		DescriptiveStatistics stats=new DescriptiveStatistics();
 		ArrayList<Double> closeStats=new ArrayList<Double>();
-		ArrayList<Date> dates=new ArrayList<Date>();
+		ArrayList<StockDate> dates=new ArrayList<StockDate>();
 		for(PriceWritable price:prices){
 			stats.addValue(price.getPrice().getHighPrice());
 			stats.addValue(price.getPrice().getClosePrice());
@@ -52,8 +51,8 @@ public class TickerStat implements Writable {
 		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
 		
 		this.meanPrice = stats.getMean();
-		this.beginTime = Collections.min(dates);
-		this.endTime = Collections.max(dates);
+		this.beginTime = Collections.min(dates, new StockDateComp());
+		this.endTime = Collections.max(dates, new StockDateComp());
 
 	}
 
@@ -64,13 +63,13 @@ public class TickerStat implements Writable {
 		this.closePrice = in.readDouble();
 		this.medianPrice = in.readDouble();
 		this.meanPrice = in.readDouble();
-		this.beginTime = new Date(in.readLong());
-		this.endTime = new Date(in.readLong());
+		this.beginTime = new StockDate(in.readLong());
+		this.endTime = new StockDate(in.readLong());
 	}
 
 	@Override
 	public String toString() {
-		return "TickerStat [beginTime=" + printFormatter.format(beginTime) + ", endTime=" + printFormatter.format(endTime)
+		return "TickerStat [beginTime=" + beginTime.toString() + ", endTime=" + endTime.toString()
 				+ ", highest price for analysis time is "
 				+ highestPriceForAnalysisTime + ", lowest price for analysis time is "
 				+ lowestPriceForAnalysisTime + ", close price is " + closePrice

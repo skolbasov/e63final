@@ -6,11 +6,19 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+
+import ru.kolbasov.MRClasses.CorrelationMapper;
+import ru.kolbasov.MRClasses.TickerStatMapper;
+import ru.kolbasov.MRClasses.TickerStatReducer;
+import ru.kolbasov.auxiliaryClasses.TickerStat;
+import ru.kolbasov.writables.CorrelationWritable;
+import ru.kolbasov.writables.PriceWritable;
 
 //TODO: add tickers dictionary for map
 public class e63final {
@@ -44,11 +52,11 @@ public class e63final {
 		job.setJobName("job2");
 		job.setMapperClass(CorrelationMapper.class);
 		job.setJarByClass(e63final.class);
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(PriceWritable.class);
-		job.setReducerClass(CorrelationReducer.class);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(TickerStat.class);
+		job.setMapOutputKeyClass(LongWritable.class);
+		job.setMapOutputValueClass(CorrelationWritable.class);
+		//job.setReducerClass(CorrelationReducer.class);
+		//job.setOutputKeyClass(Text.class);
+		//job.setOutputValueClass(CorrelationWritable.class);
 		return job;
 	}
 
@@ -68,10 +76,10 @@ public class e63final {
 			System.exit(2);
 		}
 
-		Job job1 = createJob1(conf, in, out);
-		job1.waitForCompletion(true);
-		// Job job2 = createJob2(conf, in, out);
+	//	Job job1 = createJob1(conf, in, out);
+		//job1.waitForCompletion(true);
+		Job job2 = createJob2(conf, in, out);
 
-		System.exit(job1.waitForCompletion(true) ? 0 : 1);
+		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 	}
 }

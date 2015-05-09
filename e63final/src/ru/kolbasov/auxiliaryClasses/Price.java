@@ -1,4 +1,4 @@
-package ru.kolbasov;
+package ru.kolbasov.auxiliaryClasses;
 
 public class Price {
 	private Double highPrice;

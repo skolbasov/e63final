@@ -1,9 +1,11 @@
-package ru.kolbasov;
+package ru.kolbasov.MRClasses;
 
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import ru.kolbasov.writables.PriceWritable;
 
 public class TickerStatMapper extends Mapper<Object, Text, Text, PriceWritable> {
 
