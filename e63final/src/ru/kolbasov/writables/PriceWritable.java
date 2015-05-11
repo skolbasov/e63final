@@ -16,6 +16,19 @@ public class PriceWritable implements Writable {
 	public StockDate getTimeslot() {
 		return this.timeslot;
 	}
+	
+	public Double getHighPrice(){
+		return this.price.getHighPrice();
+	}
+	
+	public Double getLowPrice(){
+		return this.price.getLowPrice();
+	}
+	
+	public Double getClosePrice(){
+		return this.price.getClosePrice();
+	}
+	
 
 	public Long getTimeslotInLong() {
 		return this.timeslot.getTime();
@@ -24,7 +37,7 @@ public class PriceWritable implements Writable {
 	public void setTimeslot(StockDate timeslot) {
 		this.timeslot = timeslot;
 	}
-
+@Deprecated
 	public Price getPrice() {
 		return this.price;
 	}
@@ -62,8 +75,7 @@ public class PriceWritable implements Writable {
 	}
 
 	public PriceWritable(PriceWritable price) {
-		this.price = new Price(price.getPrice().getHighPrice(), price
-				.getPrice().getLowPrice(), price.getPrice().getClosePrice());
+		this.price = new Price(price.getHighPrice(), price.getLowPrice(), price.getClosePrice());
 		this.timeslot = new StockDate(price.getTimeslot());
 
 	}

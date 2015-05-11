@@ -17,13 +17,13 @@ public class DayStatisticsReducer extends
 		// TODO Think about the lowest price comparison
 		Price price = new Price(0d, 999999999999d, 0d);
 		for (PriceWritable value : values) {
-			if (price.getHighPrice() < value.getPrice().getHighPrice()) {
-				price.setHighPrice(value.getPrice().getHighPrice());
+			if (price.getHighPrice() < value.getHighPrice()) {
+				price.setHighPrice(value.getHighPrice());
 			}
-			if (price.getLowPrice() > value.getPrice().getLowPrice()) {
-				price.setLowPrice(value.getPrice().getLowPrice());
+			if (price.getLowPrice() > value.getLowPrice()) {
+				price.setLowPrice(value.getLowPrice());
 			}
-			price.setClosePrice(value.getPrice().getClosePrice());
+			price.setClosePrice(value.getClosePrice());
 
 		}
 		context.write(key, new Text(price.toWriteSimple()));

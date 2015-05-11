@@ -6,4 +6,6 @@ public class Variables {
 	// trading days period
 	public static final Long _ANALYSISFRAME = 30L;
 	public static final Long _DAYINMILLIS = 86400000L;
+	public static final int _DAYSFORTURNOVER=180;//during this amount of calendar days the strategy counts successful
+	//TODO add percent increase for turnover
 }

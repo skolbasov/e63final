@@ -13,7 +13,7 @@ public class StrategyCheckResultsReducer extends
 	public void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		int count = 0;
-		for (IntWritable iterator : values) {
+		for (@SuppressWarnings("unused") IntWritable iterator : values) {
 			count++;
 		}
 

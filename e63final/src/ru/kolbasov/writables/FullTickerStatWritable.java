@@ -38,10 +38,10 @@ public class FullTickerStatWritable implements Writable {
 		ArrayList<Double> closeStats = new ArrayList<Double>();
 		ArrayList<StockDate> dates = new ArrayList<StockDate>();
 		for (PriceWritable price : prices) {
-			stats.addValue(price.getPrice().getHighPrice());
-			stats.addValue(price.getPrice().getClosePrice());
-			stats.addValue(price.getPrice().getLowPrice());
-			closeStats.add(price.getPrice().getClosePrice());
+			stats.addValue(price.getHighPrice());
+			stats.addValue(price.getClosePrice());
+			stats.addValue(price.getLowPrice());
+			closeStats.add(price.getClosePrice());
 			dates.add(price.getTimeslot());
 		}
 

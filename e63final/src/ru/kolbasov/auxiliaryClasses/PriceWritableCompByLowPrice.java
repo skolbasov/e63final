@@ -9,8 +9,8 @@ public class PriceWritableCompByLowPrice implements Comparator<PriceWritable> {
 	@Override
 	public int compare(PriceWritable price1, PriceWritable price2) {
 
-		return price1.getPrice().getLowPrice()
-				.compareTo(price2.getPrice().getLowPrice());
+		return price1.getLowPrice()
+				.compareTo(price2.getLowPrice());
 
 	}
 

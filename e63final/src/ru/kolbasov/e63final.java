@@ -158,19 +158,24 @@ public class e63final {
 		FileUtils.deleteDirectory(new File(otherArgs[2]));
 		Path temp1 = new Path(args[2] + "/1");
 		Path temp2 = new Path(args[2] + "/2");
+		Path temp3 = new Path(args[2] + "/3");
+		Path out1 = new Path(args[1] + "/1");
+		Path out2 = new Path(args[2] + "/2");
 		if (otherArgs.length != 3) {
 			System.err
 					.println("Input, output and temp directories should be specified as input parameters");
 			System.exit(2);
 		}
 
-		// Job job1 = createJob1(conf, in, out);
-		// job1.waitForCompletion(true);
 		Job job = dayStatisticsJob(conf, in, temp1);
 		job.waitForCompletion(true);
 		Job job2 = strategyCheckJob(conf, temp1, temp2);
 		job2.waitForCompletion(true);
-		Job job3 = strategyCheckResultsJob(conf, temp2, out);
-		System.exit(job3.waitForCompletion(true) ? 0 : 1);
+		Job job3 = strategyCheckResultsJob(conf, temp2, out1);
+		Job job4= statisticsJob(conf,in,temp3);
+		job3.waitForCompletion(true);
+		job4.waitForCompletion(true);
+		//System.exit(job3.waitForCompletion(true) ? 0 : 1);
+		System.exit(1);
 	}
 }

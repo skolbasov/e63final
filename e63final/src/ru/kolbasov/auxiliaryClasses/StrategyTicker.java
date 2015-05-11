@@ -17,6 +17,14 @@ public class StrategyTicker {
 		return endDate;
 	}
 
+	public StockDate getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(StockDate beginDate) {
+		this.beginDate = beginDate;
+	}
+
 	private Boolean sell = false;
 	private Boolean wait = false;
 	private String provedExpl = "";
@@ -79,17 +87,14 @@ public class StrategyTicker {
 			endDate = values.get(values.size() - 1).getTimeslot();
 
 			priceStat.setHighPrice(Collections
-					.max(values, new PriceWritableCompByHighestPrice())
-					.getPrice().getHighPrice());
+					.max(values, new PriceWritableCompByHighestPrice()).getHighPrice());
 			priceStat.setLowPrice(Collections
-					.min(values, new PriceWritableCompByLowPrice()).getPrice()
-					.getLowPrice());
-			priceStat.setClosePrice(values.get(values.size() - 1).getPrice()
-					.getClosePrice());
-			if (values.get(values.size() - 1).getPrice().getHighPrice() >= priceStat
+					.min(values, new PriceWritableCompByLowPrice()).getLowPrice());
+			priceStat.setClosePrice(values.get(values.size() - 1).getClosePrice());
+			if (values.get(values.size() - 1).getHighPrice() >= priceStat
 					.getHighPrice()) {
 				this.buy = true;
-			} else if (values.get(values.size() - 1).getPrice().getLowPrice() <= priceStat
+			} else if (values.get(values.size() - 1).getLowPrice() <= priceStat
 					.getLowPrice())
 				this.sell = true;
 			else

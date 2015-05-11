@@ -16,14 +16,17 @@ public class TickerStatWritable implements Writable {
 	private Double eurCorrelation;
 
 	private class priceTime {
+
+		@SuppressWarnings("unused")
+		Double price;
+		@SuppressWarnings("unused")
+		StockDate time;
 		public priceTime(Double price, StockDate time) {
 			super();
 			this.price = price;
 			this.time = time;
 		}
 
-		Double price;
-		StockDate time;
 
 	}
 
