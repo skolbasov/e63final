@@ -10,8 +10,7 @@ public class PriceWritableCompByHighestPrice implements
 	@Override
 	public int compare(PriceWritable price1, PriceWritable price2) {
 
-		return price1.getHighPrice()
-				.compareTo(price2.getHighPrice());
+		return price1.getHighPrice().compareTo(price2.getHighPrice());
 
 	}
 

@@ -46,7 +46,7 @@ public class StrategyTickerStat {
 				strategyRecomendations.add(new StrategyTicker(strategyPrices));
 				strategyPrices.clear();
 			} else {
-				//Do nothing
+				// Do nothing
 			}
 		}
 
@@ -72,23 +72,34 @@ public class StrategyTickerStat {
 							&& (values.get(i + iterator).getBuy() && value
 									.getPriceStat().getHighPrice() < values
 									.get(i + iterator).getPriceStat()
-									.getHighPrice())&&(new StockDate(value.getEndDate().getTime()+Variables._DAYINMILLIS*Variables._DAYSFORTURNOVER)).compareTo(values.get(iterator+i).getBeginDate()) > 0)		
-							
-							
-							 {
+									.getHighPrice())
+							&& (new StockDate(value.getEndDate().getTime()
+									+ Variables._DAYINMILLIS
+									* Variables._DAYSFORTURNOVER))
+									.compareTo(values.get(iterator + i)
+											.getBeginDate()) > 0)
+
+					{
 						value.setProved(true);
 						value.setProvedExpl("Future buy periods with higher prices exist");
 						break;
 					}
 					for (PriceWritable tempPw : pricesList) {
-						if ((value.getEndDate().compareTo(tempPw.getTimeslot()) < 0)&&((new StockDate(value.getEndDate().getTime()+Variables._DAYINMILLIS*Variables._DAYSFORTURNOVER)).compareTo(tempPw.getTimeslot()) > 0)) {
+						if ((value.getEndDate().compareTo(tempPw.getTimeslot()) < 0)
+								&& ((new StockDate(value.getEndDate().getTime()
+										+ Variables._DAYINMILLIS
+										* Variables._DAYSFORTURNOVER))
+										.compareTo(tempPw.getTimeslot()) > 0)) {
 							// if below 0 - the tempPw value was later than
 							// StrategyTicker value
 							// TODO Only single he is definitely not enough. Add
 							// some period for strict prove
-							if ((value.getPriceStat().getHighPrice() < tempPw.getHighPrice())
-									|| (value.getPriceStat().getHighPrice() < tempPw.getLowPrice())
-									|| (value.getPriceStat().getHighPrice() < tempPw.getClosePrice())) {
+							if ((value.getPriceStat().getHighPrice() < tempPw
+									.getHighPrice())
+									|| (value.getPriceStat().getHighPrice() < tempPw
+											.getLowPrice())
+									|| (value.getPriceStat().getHighPrice() < tempPw
+											.getClosePrice())) {
 								value.setProved(true);
 								value.setProvedExpl("Future period with higher prices exists:"
 										+ tempPw);
@@ -102,23 +113,33 @@ public class StrategyTickerStat {
 							&& (values.get(i + iterator).getSell() && value
 									.getPriceStat().getLowPrice() < values
 									.get(i + iterator).getPriceStat()
-									.getLowPrice())&&
-									(new StockDate(value.getEndDate().getTime()+Variables._DAYINMILLIS*Variables._DAYSFORTURNOVER)).compareTo(values.get(iterator+i).getBeginDate()) > 0)		
-							
-							 {
+									.getLowPrice())
+							&& (new StockDate(value.getEndDate().getTime()
+									+ Variables._DAYINMILLIS
+									* Variables._DAYSFORTURNOVER))
+									.compareTo(values.get(iterator + i)
+											.getBeginDate()) > 0)
+
+					{
 						value.setProved(true);
 						value.setProvedExpl("Future sell periods with lower prices exist");
 						break;
 					}
 					for (PriceWritable tempPw : pricesList) {
-						if ((value.getEndDate().compareTo(tempPw.getTimeslot()) < 0) &&((new StockDate(value.getEndDate().getTime()+Variables._DAYINMILLIS*Variables._DAYSFORTURNOVER)).compareTo(tempPw.getTimeslot()) > 0)){
+						if ((value.getEndDate().compareTo(tempPw.getTimeslot()) < 0)
+								&& ((new StockDate(value.getEndDate().getTime()
+										+ Variables._DAYINMILLIS
+										* Variables._DAYSFORTURNOVER))
+										.compareTo(tempPw.getTimeslot()) > 0)) {
 							// if below 0 - the tempPw value was later than
 							// StrategyTicker value
 							// TODO Only single he is definitely not enough. Add
 							// some period for strict prove
-							if ((value.getPriceStat().getLowPrice() > tempPw.getLowPrice())
+							if ((value.getPriceStat().getLowPrice() > tempPw
+									.getLowPrice())
 
-									|| (value.getPriceStat().getHighPrice() > tempPw.getClosePrice())) {
+									|| (value.getPriceStat().getHighPrice() > tempPw
+											.getClosePrice())) {
 								value.setProved(true);
 								value.setProvedExpl("Future period with lower prices exists:"
 										+ tempPw);

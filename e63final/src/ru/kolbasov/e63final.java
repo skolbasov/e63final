@@ -11,6 +11,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
@@ -18,6 +20,8 @@ import ru.kolbasov.MRClasses.CorrelationMapper;
 import ru.kolbasov.MRClasses.CorrelationReducer;
 import ru.kolbasov.MRClasses.DayStatisticsMapper;
 import ru.kolbasov.MRClasses.DayStatisticsReducer;
+import ru.kolbasov.MRClasses.JoinStatisticsMapper;
+import ru.kolbasov.MRClasses.JoinStatisticsReducer;
 import ru.kolbasov.MRClasses.StrategyCheckMapper;
 import ru.kolbasov.MRClasses.StrategyCheckReducer;
 import ru.kolbasov.MRClasses.StrategyCheckResultsMapper;
@@ -35,6 +39,7 @@ public class e63final {
 	private static Job statisticsJob(Configuration conf, Path in, Path out)
 			throws IOException {
 
+		@SuppressWarnings("deprecation")
 		Job job = new Job(conf, "statisticsJob");
 		FileInputFormat.setInputPaths(job, in);
 		FileOutputFormat.setOutputPath(job, out);
@@ -47,6 +52,28 @@ public class e63final {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(FullTickerStatWritable.class);
 		return job;
+	}
+
+	private static Job joinStatisticsJob(Configuration conf, Path in1,
+			Path in2, Path out) throws IOException {
+
+		@SuppressWarnings("deprecation")
+		Job job = new Job(conf, "joinStatisticsJob");
+
+		MultipleInputs.addInputPath(job, in1, TextInputFormat.class);
+		MultipleInputs.addInputPath(job, in2, TextInputFormat.class);
+		
+		FileOutputFormat.setOutputPath(job, out);
+		job.setMapperClass(JoinStatisticsMapper.class);
+		job.setJobName("joinStatisticsJob");
+		job.setJarByClass(e63final.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+		job.setReducerClass(JoinStatisticsReducer.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		return job;
+		
 	}
 
 	private static Job createJob2(Configuration conf, Path in, Path out)
@@ -160,7 +187,7 @@ public class e63final {
 		Path temp2 = new Path(args[2] + "/2");
 		Path temp3 = new Path(args[2] + "/3");
 		Path out1 = new Path(args[1] + "/1");
-		Path out2 = new Path(args[2] + "/2");
+		Path out2 = new Path(args[1] + "/2");
 		if (otherArgs.length != 3) {
 			System.err
 					.println("Input, output and temp directories should be specified as input parameters");
@@ -172,10 +199,13 @@ public class e63final {
 		Job job2 = strategyCheckJob(conf, temp1, temp2);
 		job2.waitForCompletion(true);
 		Job job3 = strategyCheckResultsJob(conf, temp2, out1);
-		Job job4= statisticsJob(conf,in,temp3);
+		Job job4 = statisticsJob(conf, in, temp3);
 		job3.waitForCompletion(true);
 		job4.waitForCompletion(true);
-		//System.exit(job3.waitForCompletion(true) ? 0 : 1);
+		Job job5 = joinStatisticsJob(conf, temp3, temp2, out2);
+	
+		job5.waitForCompletion(true);
+		// System.exit(job3.waitForCompletion(true) ? 0 : 1);
 		System.exit(1);
 	}
 }

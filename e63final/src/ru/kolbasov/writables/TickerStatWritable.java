@@ -21,12 +21,12 @@ public class TickerStatWritable implements Writable {
 		Double price;
 		@SuppressWarnings("unused")
 		StockDate time;
+
 		public priceTime(Double price, StockDate time) {
 			super();
 			this.price = price;
 			this.time = time;
 		}
-
 
 	}
 

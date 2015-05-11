@@ -14,10 +14,15 @@ public class StrategyCheckResultsMapper extends
 	@Override
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
-		String val = value.toString().trim();
+	//	String val = value.toString().trim();
+		String val = value.toString();
 		String[] itr = val.split(Variables._DELIM);
 		if (itr.length > 1) {
-			context.write(new Text(itr[1]), new IntWritable(1));
+			
+			for(String tempStr:itr){
+			if (tempStr.contains("Prove"))
+			context.write(new Text(tempStr), new IntWritable(1));
+			}
 		}
 
 	}

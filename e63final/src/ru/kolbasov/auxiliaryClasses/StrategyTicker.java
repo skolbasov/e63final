@@ -86,11 +86,12 @@ public class StrategyTicker {
 
 			endDate = values.get(values.size() - 1).getTimeslot();
 
-			priceStat.setHighPrice(Collections
-					.max(values, new PriceWritableCompByHighestPrice()).getHighPrice());
-			priceStat.setLowPrice(Collections
-					.min(values, new PriceWritableCompByLowPrice()).getLowPrice());
-			priceStat.setClosePrice(values.get(values.size() - 1).getClosePrice());
+			priceStat.setHighPrice(Collections.max(values,
+					new PriceWritableCompByHighestPrice()).getHighPrice());
+			priceStat.setLowPrice(Collections.min(values,
+					new PriceWritableCompByLowPrice()).getLowPrice());
+			priceStat.setClosePrice(values.get(values.size() - 1)
+					.getClosePrice());
 			if (values.get(values.size() - 1).getHighPrice() >= priceStat
 					.getHighPrice()) {
 				this.buy = true;

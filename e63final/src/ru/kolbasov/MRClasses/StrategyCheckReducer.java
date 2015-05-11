@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import ru.kolbasov.auxiliaryClasses.StrategyTicker;
 import ru.kolbasov.auxiliaryClasses.StrategyTickerStat;
+import ru.kolbasov.auxiliaryClasses.Variables;
 import ru.kolbasov.writables.PriceWritable;
 
 public class StrategyCheckReducer extends
@@ -16,11 +17,10 @@ public class StrategyCheckReducer extends
 	public void reduce(Text key, Iterable<PriceWritable> values, Context context)
 			throws IOException, InterruptedException {
 
-		StrategyTickerStat strategyStat = new StrategyTickerStat(
-				values);
+		StrategyTickerStat strategyStat = new StrategyTickerStat(values);
 		for (StrategyTicker value : strategyStat.getStrategyRecomendations()) {
 			if (!value.toWrite().isEmpty()) {
-				context.write(key, new Text(value.toWrite()));
+				context.write(new Text(key.toString()+Variables._DELIM), new Text(value.toWrite()));
 			}
 		}
 

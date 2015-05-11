@@ -20,7 +20,6 @@ public class TickerStatMapper extends Mapper<Object, Text, Text, PriceWritable> 
 		PriceWritable price = new PriceWritable(itr[5], itr[6], itr[7], itr[2],
 				itr[3]);
 
-
 		context.write(new Text(ticker), price);
 
 		// }
