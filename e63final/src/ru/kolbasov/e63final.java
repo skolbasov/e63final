@@ -14,11 +14,15 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 import ru.kolbasov.MRClasses.CorrelationMapper;
+import ru.kolbasov.MRClasses.CorrelationReducer;
+import ru.kolbasov.MRClasses.StrategyCheckMapper;
+import ru.kolbasov.MRClasses.StrategyCheckReducer;
 import ru.kolbasov.MRClasses.TickerStatMapper;
 import ru.kolbasov.MRClasses.TickerStatReducer;
-import ru.kolbasov.auxiliaryClasses.TickerStat;
 import ru.kolbasov.writables.CorrelationWritable;
+import ru.kolbasov.writables.FullTickerStatWritable;
 import ru.kolbasov.writables.PriceWritable;
+import ru.kolbasov.writables.TickerStatWritable;
 
 //TODO: add tickers dictionary for map
 public class e63final {
@@ -37,9 +41,8 @@ public class e63final {
 		job.setMapOutputValueClass(PriceWritable.class);
 
 		job.setReducerClass(TickerStatReducer.class);
-
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(TickerStat.class);
+		job.setOutputValueClass(FullTickerStatWritable.class);
 		return job;
 	}
 
@@ -54,12 +57,28 @@ public class e63final {
 		job.setJarByClass(e63final.class);
 		job.setMapOutputKeyClass(LongWritable.class);
 		job.setMapOutputValueClass(CorrelationWritable.class);
-		//job.setReducerClass(CorrelationReducer.class);
-		//job.setOutputKeyClass(Text.class);
-		//job.setOutputValueClass(CorrelationWritable.class);
+		job.setReducerClass(CorrelationReducer.class);
+		job.setOutputKeyClass(LongWritable.class);
+		job.setOutputValueClass(TickerStatWritable.class);
 		return job;
 	}
+	private static Job createJob3(Configuration conf, Path in, Path out)
+			throws IOException {
 
+		Job job = new Job(conf, "job2");
+		FileInputFormat.setInputPaths(job, in);
+		FileOutputFormat.setOutputPath(job, out);
+		job.setJobName("job2");
+		job.setMapperClass(StrategyCheckMapper.class);
+		job.setJarByClass(e63final.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(PriceWritable.class);
+		job.setReducerClass(StrategyCheckReducer.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(FullTickerStatWritable.class);
+		return job;
+	}
+	
 	public static void main(String[] args) throws Exception {
 
 		Configuration conf = new Configuration();
@@ -78,7 +97,7 @@ public class e63final {
 
 	//	Job job1 = createJob1(conf, in, out);
 		//job1.waitForCompletion(true);
-		Job job2 = createJob2(conf, in, out);
+		Job job2 = createJob3(conf, in, out);
 
 		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 	}

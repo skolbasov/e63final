@@ -36,6 +36,9 @@ public class Price {
 	}
 	public Price() {
 		// TODO Auto-generated constructor stub
+	this.highPrice=0d;
+		this.lowPrice=0d;
+		this.closePrice=0d;
 	}
 
 }

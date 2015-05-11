@@ -12,10 +12,14 @@ import ru.kolbasov.auxiliaryClasses.StockDate;
 public class PriceWritable implements Writable {
 	private StockDate timeslot;
 	private Price price=new Price();
-
 	public StockDate getTimeslot() {
 		return timeslot;
 	}
+
+	public Long getTimeslotInLong() {
+		return timeslot.getTime();
+	}
+	
 
 	public void setTimeslot(StockDate timeslot) {
 		this.timeslot = timeslot;
@@ -36,7 +40,7 @@ public class PriceWritable implements Writable {
 	
 	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date, String time) {
 		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
-		
+		this.timeslot=new StockDate(date,time);
 
 	}
 

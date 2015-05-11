@@ -4,27 +4,41 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang.time.DateUtils;
+
+
 public class StockDate {
 	private Date date;
 	private SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyyMMdd");
+	private SimpleDateFormat timeFormatter=new SimpleDateFormat("HHmmss");
 	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
 	private SimpleDateFormat printFormatter = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss");
 	public StockDate() {
 		// TODO Auto-generated constructor stub
-		Date date=new Date();
+		this.date=new Date();
 	}
 
+
+	
 	public StockDate(Long date) {
 		this.date=new Date(date);
 	}
 
-	public StockDate(String date) {
+	public StockDate(String date, Boolean isTime) {
 		try {
-			this.date=dateFormatter.parse(date);
+			if (isTime){
+				this.date=timeFormatter.parse(date);
+			}
+			else{
+				this.date=dateFormatter.parse(date);
+			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
+	
+
+	
 	
 	public StockDate(String date, String time) {
 		

@@ -7,15 +7,16 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import ru.kolbasov.writables.CorrelationWritable;
+import ru.kolbasov.writables.TickerStatWritable;
 
 public class CorrelationReducer extends
-		Reducer<LongWritable, CorrelationWritable, Text, CorrelationWritable> {
+		Reducer<LongWritable, CorrelationWritable, LongWritable, TickerStatWritable> {
 
-	public void reduce(Text key, Iterable<CorrelationWritable> values, Context context)
+	public void reduce(LongWritable key, Iterable<CorrelationWritable> values, Context context)
 			throws IOException, InterruptedException {
-		for(CorrelationWritable value:values){
-		context.write(key, value);
-		}
+		
+		context.write(key, new TickerStatWritable(values));
+		
 	}
 
 }

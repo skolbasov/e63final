@@ -1,4 +1,4 @@
-package ru.kolbasov.auxiliaryClasses;
+package ru.kolbasov.writables;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -12,9 +12,10 @@ import java.util.Date;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.hadoop.io.Writable;
 
-import ru.kolbasov.writables.PriceWritable;
+import ru.kolbasov.auxiliaryClasses.StockDate;
+import ru.kolbasov.auxiliaryClasses.StockDateComp;
 
-public class TickerStat implements Writable {
+public class FullTickerStatWritable implements Writable {
 	private Double highestPriceForAnalysisTime;
 	private Double lowestPriceForAnalysisTime;
 	private Double closePrice;
@@ -22,16 +23,17 @@ public class TickerStat implements Writable {
 	private Double meanPrice;
 	private StockDate beginTime;
 	private StockDate endTime;
+	
 	DecimalFormat df = new DecimalFormat("#.######");
-	public TickerStat() {
+	public FullTickerStatWritable() {
 
 	}
-    public static TickerStat read(DataInput in) throws IOException {
-        TickerStat w = new TickerStat();
+    public static FullTickerStatWritable read(DataInput in) throws IOException {
+        FullTickerStatWritable w = new FullTickerStatWritable();
         w.readFields(in);
         return w;
       }
-	public TickerStat(Iterable<PriceWritable> prices) {
+	public FullTickerStatWritable(Iterable<PriceWritable> prices) {
 		DescriptiveStatistics stats=new DescriptiveStatistics();
 		ArrayList<Double> closeStats=new ArrayList<Double>();
 		ArrayList<StockDate> dates=new ArrayList<StockDate>();
@@ -49,7 +51,6 @@ public class TickerStat implements Writable {
 		this.lowestPriceForAnalysisTime = stats.getMin();
 		this.closePrice = closeStats.get(closeStats.size()-1);
 		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
-		
 		this.meanPrice = stats.getMean();
 		this.beginTime = Collections.min(dates, new StockDateComp());
 		this.endTime = Collections.max(dates, new StockDateComp());

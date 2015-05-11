@@ -18,9 +18,9 @@ public class CorrelationMapper extends
 
 		String[] itr = value.toString().split(";");
 		// TODO: add data check
-		CorrelationWritable correlationData = new CorrelationWritable(itr[5], itr[6], itr[7], itr[0]);
+		CorrelationWritable correlationData = new CorrelationWritable(itr[5], itr[6], itr[7], itr[0], itr[3]);
 		
-		StockDate stockDate=new StockDate(itr[2]);
+		StockDate stockDate=new StockDate(itr[2], false);
 		//System.out.println(date.getTime()+" "+correlationData);
 		
 		//System.out.println(new Text(stockDate.getTime().toString()).toString());
