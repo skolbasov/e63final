@@ -4,16 +4,13 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.hadoop.io.Writable;
 
 import ru.kolbasov.auxiliaryClasses.StockDate;
-import ru.kolbasov.auxiliaryClasses.StockDateComp;
 
 public class FullTickerStatWritable implements Writable {
 	private Double highestPriceForAnalysisTime;
@@ -23,37 +20,41 @@ public class FullTickerStatWritable implements Writable {
 	private Double meanPrice;
 	private StockDate beginTime;
 	private StockDate endTime;
-	
+
 	DecimalFormat df = new DecimalFormat("#.######");
+
 	public FullTickerStatWritable() {
 
 	}
-    public static FullTickerStatWritable read(DataInput in) throws IOException {
-        FullTickerStatWritable w = new FullTickerStatWritable();
-        w.readFields(in);
-        return w;
-      }
+
+	public static FullTickerStatWritable read(DataInput in) throws IOException {
+		FullTickerStatWritable w = new FullTickerStatWritable();
+		w.readFields(in);
+		return w;
+	}
+
 	public FullTickerStatWritable(Iterable<PriceWritable> prices) {
-		DescriptiveStatistics stats=new DescriptiveStatistics();
-		ArrayList<Double> closeStats=new ArrayList<Double>();
-		ArrayList<StockDate> dates=new ArrayList<StockDate>();
-		for(PriceWritable price:prices){
+		DescriptiveStatistics stats = new DescriptiveStatistics();
+		ArrayList<Double> closeStats = new ArrayList<Double>();
+		ArrayList<StockDate> dates = new ArrayList<StockDate>();
+		for (PriceWritable price : prices) {
 			stats.addValue(price.getPrice().getHighPrice());
 			stats.addValue(price.getPrice().getClosePrice());
 			stats.addValue(price.getPrice().getLowPrice());
 			closeStats.add(price.getPrice().getClosePrice());
 			dates.add(price.getTimeslot());
 		}
-		
-	
-		
+
 		this.highestPriceForAnalysisTime = stats.getMax();
 		this.lowestPriceForAnalysisTime = stats.getMin();
-		this.closePrice = closeStats.get(closeStats.size()-1);
-		this.medianPrice = stats.getPercentile(50);//Median is the 50th percentile
+		this.closePrice = closeStats.get(closeStats.size() - 1);
+		this.medianPrice = stats.getPercentile(50);// Median is the 50th
+													// percentile
 		this.meanPrice = stats.getMean();
-		this.beginTime = Collections.min(dates, new StockDateComp());
-		this.endTime = Collections.max(dates, new StockDateComp());
+		// this.beginTime = Collections.min(dates, new StockDateComp());
+		// this.endTime = Collections.max(dates, new StockDateComp());
+		this.beginTime = Collections.min(dates);
+		this.endTime = Collections.max(dates);
 
 	}
 
@@ -70,12 +71,13 @@ public class FullTickerStatWritable implements Writable {
 
 	@Override
 	public String toString() {
-		return "TickerStat [beginTime=" + beginTime.toString() + ", endTime=" + endTime.toString()
-				+ ", highest price for analysis time is "
-				+ highestPriceForAnalysisTime + ", lowest price for analysis time is "
+		return "TickerStat [beginTime=" + beginTime.toString() + ", endTime="
+				+ endTime.toString() + ", highest price for analysis time is "
+				+ highestPriceForAnalysisTime
+				+ ", lowest price for analysis time is "
 				+ lowestPriceForAnalysisTime + ", close price is " + closePrice
-				+ ", median " + df.format(medianPrice) + ", mean " + df.format(meanPrice)
-				+ "]";
+				+ ", median " + df.format(medianPrice) + ", mean "
+				+ df.format(meanPrice) + "]";
 	}
 
 	@Override
