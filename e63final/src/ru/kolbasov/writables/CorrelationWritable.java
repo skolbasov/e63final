@@ -15,7 +15,7 @@ import ru.kolbasov.auxiliaryClasses.StockDate;
 
 public class CorrelationWritable implements Writable {
 	private String ticker;
-	private Price price=new Price();
+	private Price price;
 	private StockDate time;
 	public String getTicker() {
 		return ticker.toString();

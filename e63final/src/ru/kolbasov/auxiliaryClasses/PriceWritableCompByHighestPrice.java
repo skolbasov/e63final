@@ -4,11 +4,11 @@ import java.util.Comparator;
 
 import ru.kolbasov.writables.PriceWritable;
 
-public class PriceWritableCompByDate implements Comparator<PriceWritable> {
+public class PriceWritableCompByHighestPrice implements Comparator<PriceWritable> {
 	
     public int compare(PriceWritable price1, PriceWritable price2) {
      
-    	return price1.getTimeslot().getTime().compareTo(price2.getTimeslot().getTime());
+    	return price1.getPrice().getHighPrice().compareTo(price2.getPrice().getHighPrice());
         
     }
 

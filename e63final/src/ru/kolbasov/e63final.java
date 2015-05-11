@@ -15,6 +15,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 import ru.kolbasov.MRClasses.CorrelationMapper;
 import ru.kolbasov.MRClasses.CorrelationReducer;
+import ru.kolbasov.MRClasses.DayStatisticsMapper;
+import ru.kolbasov.MRClasses.DayStatisticsReducer;
 import ru.kolbasov.MRClasses.StrategyCheckMapper;
 import ru.kolbasov.MRClasses.StrategyCheckReducer;
 import ru.kolbasov.MRClasses.TickerStatMapper;
@@ -22,6 +24,7 @@ import ru.kolbasov.MRClasses.TickerStatReducer;
 import ru.kolbasov.writables.CorrelationWritable;
 import ru.kolbasov.writables.FullTickerStatWritable;
 import ru.kolbasov.writables.PriceWritable;
+import ru.kolbasov.writables.StrategyTickerStatWritable;
 import ru.kolbasov.writables.TickerStatWritable;
 
 //TODO: add tickers dictionary for map
@@ -62,22 +65,41 @@ public class e63final {
 		job.setOutputValueClass(TickerStatWritable.class);
 		return job;
 	}
-	private static Job createJob3(Configuration conf, Path in, Path out)
+//This job checks the strategy from the book "Technical Analysis of the Futures Markets: A Comprehensive Guide to Trading Methods and Applications "
+	private static Job strategyCheckJob(Configuration conf, Path in, Path out)
 			throws IOException {
 
-		Job job = new Job(conf, "job2");
+		Job job = new Job(conf, "job3");
 		FileInputFormat.setInputPaths(job, in);
 		FileOutputFormat.setOutputPath(job, out);
-		job.setJobName("job2");
+		job.setJobName("job3");
 		job.setMapperClass(StrategyCheckMapper.class);
 		job.setJarByClass(e63final.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(PriceWritable.class);
 		job.setReducerClass(StrategyCheckReducer.class);
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(FullTickerStatWritable.class);
+		job.setOutputValueClass(Text.class);
 		return job;
 	}
+//This job should be completed prior to the StrategyCheckJob	
+	private static Job dayStatisticsJob(Configuration conf, Path in, Path out)
+			throws IOException {
+
+		Job job = new Job(conf, "DayStatisticsJob");
+		FileInputFormat.setInputPaths(job, in);
+		FileOutputFormat.setOutputPath(job, out);
+		job.setJobName("DayStatisticsJob");
+		job.setMapperClass(DayStatisticsMapper.class);
+		job.setJarByClass(e63final.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(PriceWritable.class);
+		job.setReducerClass(DayStatisticsReducer.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		return job;
+	}
+	
 	
 	public static void main(String[] args) throws Exception {
 
@@ -86,18 +108,20 @@ public class e63final {
 				.getRemainingArgs();
 		Path in = new Path(args[0]);
 		Path out = new Path(args[1]);
-		Path temp = new Path("chain-temp");
+		Path temp = new Path(args[2]);
 		FileUtils.deleteDirectory(new File(otherArgs[1]));
-
-		if (otherArgs.length != 2) {
+		FileUtils.deleteDirectory(new File(otherArgs[2]));
+		if (otherArgs.length != 3) {
 			System.err
-					.println("Input and output directories should be specified as input parameters");
+					.println("Input, output and temp directories should be specified as input parameters");
 			System.exit(2);
 		}
 
 	//	Job job1 = createJob1(conf, in, out);
 		//job1.waitForCompletion(true);
-		Job job2 = createJob3(conf, in, out);
+		Job job = dayStatisticsJob(conf, in, temp);
+		job.waitForCompletion(true);
+		Job job2=strategyCheckJob(conf,temp,out);
 
 		System.exit(job2.waitForCompletion(true) ? 0 : 1);
 	}

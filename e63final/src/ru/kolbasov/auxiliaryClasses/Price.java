@@ -5,11 +5,11 @@ public class Price {
 	private Double lowPrice;
 	private Double closePrice;
 	public Price(Double highPrice, Double lowPrice, Double closePrice) {
-		super();
 		this.highPrice = highPrice;
 		this.lowPrice = lowPrice;
 		this.closePrice = closePrice;
 	}
+	
 
 	public Double getHighPrice() {
 		return highPrice;
@@ -29,16 +29,25 @@ public class Price {
 				+ ", closePrice=" + closePrice + "]";
 	}
 	public Double getClosePrice() {
-		return closePrice;
+		return this.closePrice;
 	}
 	public void setClosePrice(Double closePrice) {
 		this.closePrice = closePrice;
 	}
 	public Price() {
-		// TODO Auto-generated constructor stub
-	this.highPrice=0d;
+		
+		this.highPrice=0d;
 		this.lowPrice=0d;
 		this.closePrice=0d;
+	}
+	
+	public String toWriteSimple(){
+		return this.highPrice+";"+this.lowPrice+";"+this.closePrice+";";
+	}
+	
+	public String toWriteExtended() {
+		return "Highest price: " + highPrice + " Lowest price: " + lowPrice
+				+ " Close price:" + closePrice + " ";
 	}
 
 }

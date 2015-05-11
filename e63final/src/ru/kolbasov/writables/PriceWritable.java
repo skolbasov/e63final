@@ -11,13 +11,13 @@ import ru.kolbasov.auxiliaryClasses.StockDate;
 
 public class PriceWritable implements Writable {
 	private StockDate timeslot;
-	private Price price=new Price();
+	private Price price;
 	public StockDate getTimeslot() {
-		return timeslot;
+		return this.timeslot;
 	}
 
 	public Long getTimeslotInLong() {
-		return timeslot.getTime();
+		return this.timeslot.getTime();
 	}
 	
 
@@ -26,7 +26,7 @@ public class PriceWritable implements Writable {
 	}
 
 	public Price getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(Price price) {
@@ -35,12 +35,56 @@ public class PriceWritable implements Writable {
 
 
 	public PriceWritable() {
-		
+		this.price=new Price();
+		this.timeslot=new StockDate();
 	}
 	
 	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date, String time) {
 		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
 		this.timeslot=new StockDate(date,time);
+
+	}
+	
+	public PriceWritable(String highPrice,String lowPrice, String closePrice,String date) {
+		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
+		this.timeslot=new StockDate(date,false);
+
+	}
+	
+	public PriceWritable(String highPrice,String lowPrice, String closePrice) {
+		this.price=new Price(Double.parseDouble(highPrice),Double.parseDouble(lowPrice),Double.parseDouble(closePrice));
+		this.timeslot=new StockDate();
+
+	}
+	
+	public PriceWritable(PriceWritable price) {
+		this.price=new Price(price.getPrice().getHighPrice(),price.getPrice().getLowPrice(),price.getPrice().getClosePrice());
+		this.timeslot=new StockDate(price.getTimeslot());
+
+	}
+	
+	public PriceWritable(Double highPrice,Double lowPrice, Double closePrice, StockDate dateTime) {
+		this.price=new Price(highPrice,lowPrice,closePrice);
+		this.setTimeslot(dateTime);;
+
+	}
+	
+	public PriceWritable(Double highPrice, Double lowPrice, Double closePrice) {
+		this.price=new Price(highPrice,lowPrice,closePrice);
+		this.setTimeslot(new StockDate());;
+
+	}
+	
+	public PriceWritable(Double highPrice,Double lowPrice, Double closePrice, Long dateTime) {
+		this.price=new Price(highPrice,lowPrice,closePrice);
+		this.setTimeslot(new StockDate(dateTime));;
+
+	}
+	
+
+	public PriceWritable(Price price,StockDate date) {
+		this.setPrice(price);
+		this.setTimeslot(date);
 
 	}
 
@@ -65,11 +109,12 @@ public class PriceWritable implements Writable {
 
 	@Override
 	public String toString() {
-		return "PriceWritable [timeslot=" + timeslot.toString() + ", price=" + price + "]";
+		return "PriceWritable [timeslot=" + this.timeslot.toString() + ", price=" + this.price + "]";
 	}
 	
     public static PriceWritable read(DataInput in) throws IOException {
-        PriceWritable w = new PriceWritable();
+      
+    	PriceWritable w = new PriceWritable();
         w.readFields(in);
         return w;
       }

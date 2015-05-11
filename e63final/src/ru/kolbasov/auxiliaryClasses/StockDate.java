@@ -18,10 +18,12 @@ public class StockDate {
 		this.date=new Date();
 	}
 
-
-	
 	public StockDate(Long date) {
 		this.date=new Date(date);
+	}
+	
+	public StockDate(StockDate date) {
+		this.date=new Date(date.getTime());
 	}
 
 	public StockDate(String date, Boolean isTime) {
@@ -52,7 +54,7 @@ public class StockDate {
 	}
 	
 	public Date getDate() {
-		return date;
+		return this.date;
 	}
 	
 	public Long getTime(){
@@ -66,7 +68,9 @@ public class StockDate {
 		return printFormatter.format(this.date);
 	}
 		
-	
+	public String toStringDateOnly() {
+		return dateFormatter.format(this.date);
+	}	
 	
 
 
