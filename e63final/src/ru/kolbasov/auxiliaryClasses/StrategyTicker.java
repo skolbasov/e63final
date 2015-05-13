@@ -85,13 +85,17 @@ public class StrategyTicker {
 			beginDate = values.get(0).getTimeslot();
 
 			endDate = values.get(values.size() - 1).getTimeslot();
-
+			// find the highest value
 			priceStat.setHighPrice(Collections.max(values,
 					new PriceWritableCompByHighestPrice()).getHighPrice());
+			// find the lowest value
+
 			priceStat.setLowPrice(Collections.min(values,
 					new PriceWritableCompByLowPrice()).getLowPrice());
+			// take the close price of last value
 			priceStat.setClosePrice(values.get(values.size() - 1)
 					.getClosePrice());
+			// perform the strategy check
 			if (values.get(values.size() - 1).getHighPrice() >= priceStat
 					.getHighPrice()) {
 				this.buy = true;

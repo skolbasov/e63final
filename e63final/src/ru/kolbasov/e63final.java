@@ -35,7 +35,14 @@ import ru.kolbasov.writables.TickerStatWritable;
 
 //TODO: add tickers dictionary for map
 public class e63final {
-
+/**
+ * Calculate the statistics for stocks (mean, median). I need it for purposes not connected with strategy check.
+ * @param conf - Job configuration
+ * @param in - input folder with the dataset
+ * @param out - output temp folder where dataset results would be written
+ * @return
+ * @throws IOException
+ */
 	private static Job statisticsJob(Configuration conf, Path in, Path out)
 			throws IOException {
 
@@ -53,7 +60,15 @@ public class e63final {
 		job.setOutputValueClass(FullTickerStatWritable.class);
 		return job;
 	}
-
+/**
+ * Aggregates the values from StrategyCheckJob and step StatisticsJob
+ * @param conf - Job configuration
+ * @param in1 - statistics job output folder
+ * @param in2 - StrategyCheck job output folder
+ * @param out - output/2 folder where would be the aggregation results of the 4WR strategy
+ * @return
+ * @throws IOException
+ */
 	private static Job joinStatisticsJob(Configuration conf, Path in1,
 			Path in2, Path out) throws IOException {
 
@@ -75,7 +90,9 @@ public class e63final {
 		return job;
 		
 	}
-
+	/**
+	 * Is not finished
+	 */
 	private static Job createJob2(Configuration conf, Path in, Path out)
 			throws IOException {
 
@@ -124,7 +141,14 @@ public class e63final {
 		job.setOutputValueClass(Text.class);
 		return job;
 	}
-
+/** 
+ * Calculates the value of proved and unproved strategies thus giving the opportunity to calculate the proof value
+ * @param conf - Job configuration
+ * @param in - StrategyCheckJob results
+ * @param out - output/1 directory with output files
+ * @return
+ * @throws IOException
+ */
 	private static Job strategyCheckResultsJob(Configuration conf, Path in,
 			Path out) throws IOException {
 
@@ -193,16 +217,16 @@ public class e63final {
 					.println("Input, output and temp directories should be specified as input parameters");
 			System.exit(2);
 		}
-
-		Job job = dayStatisticsJob(conf, in, temp1);
+//Job chain
+		Job job = dayStatisticsJob(conf, in, temp1);//make the day trading statistics
 		job.waitForCompletion(true);
-		Job job2 = strategyCheckJob(conf, temp1, temp2);
+		Job job2 = strategyCheckJob(conf, temp1, temp2);//make the strategies and prove them
 		job2.waitForCompletion(true);
-		Job job3 = strategyCheckResultsJob(conf, temp2, out1);
-		Job job4 = statisticsJob(conf, in, temp3);
+		Job job3 = strategyCheckResultsJob(conf, temp2, out1);//aggregate proves
+		Job job4 = statisticsJob(conf, in, temp3);//make the statistics(mean, median)
 		job3.waitForCompletion(true);
 		job4.waitForCompletion(true);
-		Job job5 = joinStatisticsJob(conf, temp3, temp2, out2);
+		Job job5 = joinStatisticsJob(conf, temp3, temp2, out2);//aggregate the stock statistics and trading recommendations
 	
 		job5.waitForCompletion(true);
 		// System.exit(job3.waitForCompletion(true) ? 0 : 1);

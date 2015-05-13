@@ -11,7 +11,9 @@ import ru.kolbasov.writables.CorrelationWritable;
 
 public class CorrelationMapper extends
 		Mapper<Object, Text, LongWritable, CorrelationWritable> {
-
+/**
+ * Is not completed
+ */
 	@Override
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {

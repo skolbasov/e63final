@@ -11,7 +11,9 @@ import ru.kolbasov.writables.TickerStatWritable;
 public class CorrelationReducer
 		extends
 		Reducer<LongWritable, CorrelationWritable, LongWritable, TickerStatWritable> {
-
+	/**
+	 * Is not completed
+	 */
 	@Override
 	public void reduce(LongWritable key, Iterable<CorrelationWritable> values,
 			Context context) throws IOException, InterruptedException {

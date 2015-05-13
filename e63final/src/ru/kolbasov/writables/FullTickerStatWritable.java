@@ -32,7 +32,10 @@ public class FullTickerStatWritable implements Writable {
 		w.readFields(in);
 		return w;
 	}
-
+/**
+ * Default constructor. Calculates the simple stocks statistics
+ * @param prices
+ */
 	public FullTickerStatWritable(Iterable<PriceWritable> prices) {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		ArrayList<Double> closeStats = new ArrayList<Double>();

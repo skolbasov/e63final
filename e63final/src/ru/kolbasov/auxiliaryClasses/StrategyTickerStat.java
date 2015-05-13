@@ -11,54 +11,69 @@ public class StrategyTickerStat {
 
 	DecimalFormat df = new DecimalFormat("#.######");
 
+	// Array of input prices
 	private ArrayList<PriceWritable> pricesList = new ArrayList<PriceWritable>();
+
+	// Array of strategic recommendations
 	private ArrayList<StrategyTicker> strategyRecomendations = new ArrayList<StrategyTicker>();
 
 	public StrategyTickerStat() {
 
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param prices
+	 *            Array of prices to analyze
+	 */
 	public StrategyTickerStat(Iterable<PriceWritable> prices) {
-
+		// Filling the prices array
 		for (PriceWritable price : prices) {
 			PriceWritable pw = new PriceWritable(price);
 			pricesList.add(pw);
 
 		}
-		// Arrange values by days
+		// Arrange values by days to ease the strategic period identification
 		Collections.sort(pricesList, new PriceWritableCompByDate());
 
 		int iterator = -1;
 		for (PriceWritable price : pricesList) {
 			ArrayList<PriceWritable> strategyPrices = new ArrayList<PriceWritable>();
 			iterator++;
-
+			// Calculating the last date of timeframe
 			Long analysisFrameEnd = price.getTimeslotInLong()
 					+ (Variables._DAYINMILLIS * Variables._ANALYSISFRAME);
 			// Check whether the priceList has necessary amount of days for
 			// analysis
 			if (pricesList.get(pricesList.size() - 1).getTimeslotInLong() > analysisFrameEnd) {
 				int i = 0;
+				// Fill the array with prices of identified period
 				while (pricesList.get(iterator + i).getTimeslotInLong() < analysisFrameEnd) {
 					strategyPrices.add(pricesList.get(i + iterator));
 					i++;
 				}
+				// Calculate the strategic recommendation
 				strategyRecomendations.add(new StrategyTicker(strategyPrices));
 				strategyPrices.clear();
 			} else {
 				// Do nothing
 			}
 		}
-
+		// prove the recommendations
 		prove(strategyRecomendations);
 	}
 
+	/**
+	 * 
+	 * @return proved recommendations
+	 */
 	public ArrayList<StrategyTicker> getStrategyRecomendations() {
 		return strategyRecomendations;
 	}
 
 	/**
-	 * Proves the strategy
+	 * Proves the strategy according to the scheme
 	 * 
 	 * @param values
 	 */
@@ -165,6 +180,11 @@ public class StrategyTickerStat {
 				+ strategyRecomendations + "]";
 	}
 
+	/**
+	 * Methods make write to file more comfortable
+	 * 
+	 * @return
+	 */
 	public String toWrite() {
 		String tempString = "";
 
